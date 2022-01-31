@@ -1,6 +1,5 @@
 import Link from "next/link";
-
-export default function Home(props) {
+export default function Profile(props) {
     //console.log(props);
     return (<>
         <h1>{props.namePage}</h1>
@@ -12,9 +11,10 @@ export default function Home(props) {
     )
 }
 
-Home.getInitialProps = () => {
+Profile.getInitialProps = async () => {
+
     const props = {
-        namePage: "Home page"
+        namePage: "Profile page"
     }
     return props;
 }
