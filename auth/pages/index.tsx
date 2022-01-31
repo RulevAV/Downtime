@@ -5,48 +5,51 @@ import { json } from 'node:stream/consumers'
 import { useState } from 'react'
 import styles from '../styles/Home.module.css'
 import jwt from "jsonwebtoken";
-
+import { AuthAPI } from "../api/api";
 
 const Home: NextPage = () => {
 
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState<string>('admin');
+  const [password, setPassword] = useState<string>('admin');
   const [message, setMessage] = useState<string>('');
 
   async function submitForm() {
-    const res = await fetch('/api/login', {
-      method: "POST",
-      headers: {
-        "Content-Type": 'application/json'
-      },
-      body: JSON.stringify({ username, password })
-    }).then((t) => t.json())
+    const res = AuthAPI.Login(username, password).then((t) => t);
+    // const res = await fetch('/api/login', {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": 'application/json'
+    //   },
+    //   body: JSON.stringify({ username, password })
+    // }).then((t) => t.json())
 
-    const token = res.token;
+    console.log(res);
 
-    if (token) {
-      const json = jwt.decode(token) as { [key: string]: string };
+    //const token = res.token;
 
-      const res = await fetch('/api/secret', {
-        method: "POST",
-        headers: {
-          "Content-Type": 'application/json'
-        },
-        body: JSON.stringify({ token })
-      }).then((t) => t.json())
+    // if (token) {
+    //   const json = jwt.decode(token) as { [key: string]: string };
 
-      if (res.secretAdminCode) {
-        setMessage(res.secretAdminCode);
-      } else {
-        setMessage("NOTHING AVAILABEL");
-      }
+    //   const res = await fetch('/api/secret', {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": 'application/json'
+    //     },
+    //     body: JSON.stringify({ token })
+    //   }).then((t) => t.json())
 
-      //setMessage(`welcome ${json.username} and you are ${json.admin ? 'an admin' : "not an admin"}`);
-    }
-    else {
-      setMessage("Somothing went wrong");
+    //   if (res.secretAdminCode) {
+    //     setMessage(res.secretAdminCode);
+    //   } else {
+    //     setMessage("NOTHING AVAILABEL");
+    //   }
 
-    }
+    //   //setMessage(`welcome ${json.username} and you are ${json.admin ? 'an admin' : "not an admin"}`);
+    // }
+    // else {
+    //   setMessage("Somothing went wrong");
+
+    // }
   }
   return (
     <div>

@@ -1,14 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
-import { KEY } from "./config";
+
+const KEY = process.env.KEY;
 
 export default function (req: NextApiRequest, res: NextApiResponse) {
-    const { token } = req.body;
 
-    const { admin } = jwt.verify(token, KEY) as { [key: string]: boolean };
+    const { cookies } = req;
 
-    if (admin) {
-        res.json({ secretAdminCode: 12345 });
+
+    const token = cookies.jwt;
+
+    const data = jwt.verify(token, KEY) as { [key: string]: boolean };
+
+    if (data) {
+        res.json({ data });
     } else {
         res.json({ admin: false });
     }
